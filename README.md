@@ -8,12 +8,12 @@ Rìg can obviously be used as an [Intrusion Prevention System (IPS)](https://en.
 
 I started Rìg as a pet project with two ideas in mind:
 
-  - I wanted to build something based on Python's **asyncio** framework because it looked very interesting and powerful - I needed to learn more about it ! ;
+  - I wanted to build something based on [Python's **asyncio** framework](https://docs.python.org/3/library/asyncio.html) because it looked very interesting and powerful - I needed to learn more about it ! ;
   - I also wanted to be warned whenever someone would successfully log on my PC through SSH.
 
-And then I realized that the combination of these two ideas would make a perfect candidate ! It then evolved into something more generic that looks a lot like the well-known [`fail2ban`](http://www.fail2ban.org/).
+And then I realized that the combination of these two ideas would make a perfect candidate ! It then evolved into something more generic that looks a lot like the well-known [fail2ban](http://www.fail2ban.org/).
 
-Rìg specifically focuses on `systemd-journald`. It's written in Python and uses the [asyncio framework](https://docs.python.org/3/library/asyncio.html) for better performance (well, I hope so).
+Rìg specifically focuses on systemd-journald. It's written in Python and uses the asyncio framework for better performance (well, I hope so).
 
 ## Features
 
