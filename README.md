@@ -25,4 +25,4 @@ Rìg specifically focuses on systemd-journald. It's written in Python and uses t
 
 ## Contributing / Helping
 
-Code reviews, patches, comments, bug reports and requests are welcome. Please read the Contributing guide for further details.
+Code reviews, patches, comments, bug reports and feature requests are welcome. Please read the [Contributing guide](CONTRIBUTING.md) for further details.
