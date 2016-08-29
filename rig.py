@@ -13,6 +13,7 @@ import configparser
 import os
 import signal
 import socket
+import sys
 import warnings
 
 from systemd import journal
@@ -47,21 +48,26 @@ class Rig(object):
 
     def load_config(self):
         """
+        Tries to load Rìg configuration from these potential locations, in
+        this order:
+
+            1. /etc/rig.conf
+            2. /etc/rig/rig.conf
+            3. ./rig.conf
+
+        If more than one of these files exist, the configuration is merged
+        which can lead to one or more section(s) being overriden.
+
+        The last file (`./rig.conf`) takes precedence over the second one,
+        which takes precedence over the first one.
         """
-        # FIXME: better handling of exceptions.
-        try:
-            # FIXME: rig.conf path
-            with open('rig.conf', 'r') as f:
-                self.config.read_file(f)
-        except FileNotFoundError as e:
-            print("Caught: {0}".format(e))
-            raise
-        except configparser.DuplicateOptionError as e:
-            print("Caught: {0}".format(e))
-            raise
-        except Exception as e:
-            print(e)
-            raise
+        configs = [
+            '/etc/rig.conf',
+            '/etc/rig/rig.conf',
+            os.path.join(sys.path[0], 'rig.conf'),
+        ]
+
+        self.config.read(configs, encoding='utf-8')
 
         return self
 
