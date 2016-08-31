@@ -8,6 +8,7 @@ __copyright__ = "Copyright (c) 2016 François Kubler"
 __license__ = "GPLv3"
 
 
+import argparse
 import sys
 import warnings
 
@@ -30,20 +31,41 @@ def print_err(*objs):
     print(*objs, file=sys.stderr, end='')
 
 
+def read_cmdline():
+    """
+    """
+    argp = argparse.ArgumentParser()
+
+    # Add an optional string argument 'config':
+    argp.add_argument("-c", "--config",
+                      dest='config_file',
+                      metavar='FILE',
+                      help="read configuration from FILE.",
+                      type=str);
+
+    # Parse command line:
+    args = argp.parse_args()
+
+    return vars(args)
+
+
 def main():
     """
     """
+    # Monkey patch warnings.showwarning:
     warnings.showwarning = customized_warning
 
+    # Read command line args, if any:
+    args = read_cmdline()
+
+    # Configuration file, if given on the command line:
+    config_file = args['config_file']
+
     try:
-        rig = Rig()
+        rig = Rig(config_file)
     except NoRuleError:
         msg = ("There are no valid rules in the config file. "
                "Rig can not run without rules.")
         print_err(msg)
     else:
         rig.start()
-
-
-if __name__ == '__main__':
-    main()

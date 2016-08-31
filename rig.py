@@ -2,12 +2,6 @@
 # coding: utf-8
 
 
-__version__ = "0.wip"
-__author__ = "François Kubler"
-__copyright__ = "Copyright (c) 2016 François Kubler"
-__license__ = "GPLv3"
-
-
 import asyncio
 import configparser
 import os
@@ -27,16 +21,22 @@ from search_matches import SearchMatches
 
 class Rig(object):
     """
+    
     """
-    def __init__(self):
+    def __init__(self, config_file=None):
         """
+        Initializes a newly created Rig object.
+
+        The initialization process takes care of reading the configuration
+        file and build the necessary parts (rules, systemd units to watch,...)
+        according to it.
         """
         self.rules = []
         self.units = set()
         self.config = configparser.ConfigParser()
 
         # Load config, rules and units:
-        self.load_config() \
+        self.load_config(config_file) \
             .load_rules() \
             .load_units()
 
@@ -46,14 +46,19 @@ class Rig(object):
         self.loop = asyncio.get_event_loop()
         self.loop.set_exception_handler(self.exceptions_handler)
 
-    def load_config(self):
+    def load_config(self, config_file=None):
         """
-        Tries to load Rìg configuration from these potential locations, in
-        this order:
+        If `config_file` is not None, tries to load Rìg configuration from
+        the given location. If, for some reason,  the file can't be read,
+        Rìg will not start.
 
-            1. /etc/rig.conf
-            2. /etc/rig/rig.conf
-            3. ./rig.conf
+        If no configuration file is given (`config_file` is None), tries to
+        load Rìg configuration from these potential locations,
+        in this specific order:
+
+            1. `/etc/rig.conf`
+            2. `/etc/rig/rig.conf`
+            3. `./rig.conf`
 
         If more than one of these files exist, the configuration is merged
         which can lead to one or more section(s) being overriden.
@@ -61,13 +66,14 @@ class Rig(object):
         The last file (`./rig.conf`) takes precedence over the second one,
         which takes precedence over the first one.
         """
-        configs = [
-            '/etc/rig.conf',
-            '/etc/rig/rig.conf',
-            os.path.join(sys.path[0], 'rig.conf'),
-        ]
+        if config_file is None:
+            config_file = [
+                '/etc/rig.conf',
+                '/etc/rig/rig.conf',
+                os.path.join(sys.path[0], 'rig.conf'),
+            ]
 
-        self.config.read(configs, encoding='utf-8')
+        self.config.read(config_file, encoding='utf-8')
 
         return self
 
@@ -143,6 +149,9 @@ class Rig(object):
                 break
 
             else:
+                # Append ".service" if not present.
+                # Note that we don't check if the service actually exists.
+                # FIXME ?
                 if not systemd_unit.endswith(".service"):
                     systemd_unit += ".service"
 
@@ -179,6 +188,8 @@ class Rig(object):
         """
         print("Starting Rìg with {0} rule{1}."
               .format(len(self.rules), 's' if len(self.rules) > 1 else ''))
+
+        print("{0}".format(self.rules))
 
         with JournaldReader() as j:
             # DEBUG MODE:
