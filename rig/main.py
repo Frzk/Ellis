@@ -13,8 +13,8 @@ import argparse
 import sys
 import warnings
 
-from rig import Rig
-from exceptions import NoRuleError
+from .rig import Rig
+from .exceptions import NoRuleError
 
 
 def customized_warning(message, category=UserWarning, filename='', lineno=-1):

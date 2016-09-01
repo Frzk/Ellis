@@ -2,8 +2,8 @@
 # coding: utf-8
 
 
-from action import Action
-from filter import Filter
+from .action import Action
+from .filter import Filter
 
 
 class Rule(object):

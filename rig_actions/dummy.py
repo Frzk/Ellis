@@ -34,7 +34,7 @@ async def wait(sec=5, **kwargs):
     :param kwargs: Additional parameters.
     """
     await asyncio.sleep(sec)
-    print("Done waiting for {0} sec.".format(sec))
+    print("{0}: Done waiting for {1} sec.".format(kwargs['rulename'], sec))
 
 async def raise_exception(**kwargs):
     """

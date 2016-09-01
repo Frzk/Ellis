@@ -7,7 +7,7 @@ import asyncio
 import functools
 import importlib
 
-from exceptions import UnsupportedActionError, UnsupportedActionArgumentError
+from .exceptions import UnsupportedActionError, UnsupportedActionArgumentError
 
 
 class Action(object):
@@ -50,10 +50,11 @@ class Action(object):
 
         # Let's try to import the required module from the 'actions' package:
         try:
-            mod = importlib.import_module("actions." + self.mod_name)
+            mod = importlib.import_module("rig_actions." + self.mod_name)
+            #mod = importlib.import_module('actions.' + self.mod_name, __name__)
         except ImportError:
             raise ValueError(("Provided action ({mod}.{func}) does not exist "
-                              "(unable to import '{mod}' module  from the "
+                              "(unable to import '{mod}' module from the "
                               "'actions' package)")
                              .format(mod=self.mod_name, func=self.func_name))
  

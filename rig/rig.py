@@ -12,11 +12,11 @@ import warnings
 
 from systemd import journal
 
-from exceptions import NoRuleError
-from journaldreader import JournaldReader
-from matches import Matches
-from rule import Rule
-from search_matches import SearchMatches
+from .exceptions import NoRuleError
+from .journaldreader import JournaldReader
+from .matches import Matches
+from .rule import Rule
+from .search_matches import SearchMatches
 
 
 class Rig(object):
