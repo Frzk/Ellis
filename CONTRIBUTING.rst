@@ -33,8 +33,8 @@ Enhancement Requests
 
 Enhancement Requests are only for **EXISTING** features. For a new feature, please make a Feature Request.
 
-  1. Create an issue here_
-  2. Add the ``enhancement`` label to the issue
-  3. Describe your idea
+1. Create an issue here_
+2. Add the ``enhancement`` label to the issue
+3. Describe your idea
 
 .. _here: https://github.com/Frzk/Rig/issues
