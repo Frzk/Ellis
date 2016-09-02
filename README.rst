@@ -11,7 +11,7 @@ About
 
 I started Rìg as a pet project with two ideas in mind:
 
-* I wanted to build something based on `Python's **asyncio** framework`_ because it looked very interesting and powerful - I needed to learn more about it ! ;
+* I wanted to build something based on `Python's asyncio framework`_ because it looked very interesting and powerful - I needed to learn more about it ! ;
 * I also wanted to be warned whenever someone would successfully log on my PC through SSH.
 
 And then I realized that the combination of these two ideas would make a perfect candidate ! It then evolved into something more generic that looks a lot like the well-known fail2ban_.
