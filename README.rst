@@ -37,4 +37,4 @@ Code reviews, patches, comments, bug reports and feature requests are welcome. P
 .. _Intrusion Prevention System (IPS): https://en.wikipedia.org/wiki/Intrusion_prevention_system
 .. _Python's asyncio framework: https://docs.python.org/3/library/asyncio.html
 .. _fail2ban: http://www.fail2ban.org/
-.. _Contributing guide: CONTRIBUTING.md
+.. _Contributing guide: CONTRIBUTING.rst
