@@ -189,8 +189,6 @@ class Rig(object):
         print("Starting Rìg with {0} rule{1}."
               .format(len(self.rules), 's' if len(self.rules) > 1 else ''))
 
-        print("{0}".format(self.rules))
-
         with JournaldReader() as j:
             # DEBUG MODE:
             # self.loop.set_debug(True)
@@ -202,6 +200,8 @@ class Rig(object):
             # Then add our journald reader to our loop:
             self.loop.add_reader(j.fileno(), self.reader, j)
 
+            # FIXME:
+            # How the f!ck am I supposed to handle CTRL+C properly ?!
             try:
                 for s in (signal.SIGINT, signal.SIGTERM):
                     self.loop.add_signal_handler(s, self.exit)
