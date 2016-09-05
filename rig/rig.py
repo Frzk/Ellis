@@ -70,7 +70,7 @@ class Rig(object):
             config_file = [
                 '/etc/rig.conf',
                 '/etc/rig/rig.conf',
-                os.path.join(sys.path[0], 'rig.conf'),
+                os.path.join(os.path.dirname(__file__), 'rig.conf'),
             ]
 
         self.config.read(config_file, encoding='utf-8')
