@@ -21,8 +21,8 @@ class Rule(object):
         *filter* is a string containing the regular expressions that Rìg will 
         try to detect. It is converted in a :class:`filter.Filter` object.
 
-        Each match increments a counter for the Rule. When *limit* is reached, 
-        the action is executed.
+        Each journald message that matches the *filter* increments a counter
+        for the Rule. When *limit* is reached, the action is executed.
 
         *action* is a string designating the action to execute when *limit* is 
         reached. It is converted in a :class:`action.Action` object.
@@ -32,7 +32,8 @@ class Rule(object):
         Raises ValueError if the *filter* can't be converted in a 
         :class:`filter.Filter` object.
 
-        Raises ValueError if 
+        Raises ValueError if the *action* can't be converted in a
+        :class:`action.Action` object.
         """
         self.name = name
         self.filter = None
@@ -56,6 +57,11 @@ class Rule(object):
 
     def check_limit(self, limit):
         """
+        Checks if the given limit is valid.
+
+        A limit must be > 0 to be considered valid.
+
+        Raises ValueError when the *limit* is not > 0.
         """
         if limit > 0:
             self.limit = limit
@@ -67,6 +73,10 @@ class Rule(object):
 
     def build_filter(self, filter):
         """
+        Tries to build a :class:`filter.Filter` instance from the given filter.
+
+        Raises ValueError if the :class:`filter.Filter` object can't be build
+        from the given filter.
         """
         try:
             self.filter = Filter.from_string(filter, self.limit)
@@ -77,6 +87,11 @@ class Rule(object):
 
     def build_action(self, action):
         """
+        Tries to build an :class:`action.Action` instance from the given
+        action.
+
+        Raises ValueError if the :class:`action.Action` object can't be build
+        from the given action.
         """
         try:
             self.action = Action.from_string(action)
@@ -87,5 +102,6 @@ class Rule(object):
 
     def run_action(self, kwargs=None):
         """
+        Asks the :class:`action.Action` to run.
         """
         self.action.run(kwargs)

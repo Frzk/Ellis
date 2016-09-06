@@ -124,4 +124,3 @@ class Counter(dict):
         self[index] += 1
 
         return index
-

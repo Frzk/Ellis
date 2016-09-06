@@ -125,8 +125,8 @@ class Action(object):
         """
         Actually executes the given *task*.
 
-        This functions acts as a wrapper to allow us catch Exceptions during 
-        the execution of the Task.
+        This function acts as a wrapper. This wrapper allows us to catch
+        Exceptions that might be raised during the execution of the Task.
 
         *task* is a :class:`asyncio.Task` created with :func:`_prepare`.
 
