@@ -13,7 +13,7 @@ import warnings
 from systemd import journal
 
 from .exceptions import NoRuleError
-from .journaldreader import JournaldReader
+#from .journaldreader import JournaldReader
 from .matches import Matches
 from .rule import Rule
 from .search_matches import SearchMatches
@@ -189,7 +189,14 @@ class Rig(object):
         print("Starting Rìg with {0} rule{1}."
               .format(len(self.rules), 's' if len(self.rules) > 1 else ''))
 
-        with JournaldReader() as j:
+        with journal.Reader() as j:
+            # Configure our journal:
+            j.log_level(journal.LOG_INFO)
+
+            # And seek to the end so we can get new messages:
+            j.seek_tail()
+            j.get_previous()
+
             # DEBUG MODE:
             # self.loop.set_debug(True)
 
@@ -200,8 +207,7 @@ class Rig(object):
             # Then add our journald reader to our loop:
             self.loop.add_reader(j.fileno(), self.reader, j)
 
-            # FIXME:
-            # How the f!ck am I supposed to handle CTRL+C properly ?!
+            # FIXME: How the f!ck am I supposed to handle CTRL+C properly ?!
             try:
                 for s in (signal.SIGINT, signal.SIGTERM):
                     self.loop.add_signal_handler(s, self.exit)
