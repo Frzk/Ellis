@@ -8,12 +8,13 @@ Provides a bunch of useless functions that may help you test some code.
 import asyncio
 import time
 
+
 def blocking_wait(sec=5, **kwargs):
     """
-    Does nothing for *sec* seconds and then prints out a message. 
-    
+    Does nothing for *sec* seconds and then prints out a message.
+
     .. note:: This function **is** blocking.
-    
+
     .. seealso:: :func:`wait`
 
     :param sec: Time to wait, in seconds.
@@ -44,4 +45,3 @@ async def raise_exception(**kwargs):
     :raises: Exception, always.
     """
     raise Exception("Catch me if you can.")
-

@@ -18,7 +18,7 @@ class NoRuleError(Exception):
 
 class UnsupportedActionError(ValueError):
     """
-    Raised when a Rule has an action set to something that doesn't look like 
+    Raised when a Rule has an action set to something that doesn't look like
     a callable name or a callable call.
     """
     # FIXME: add a link to the doc when it's written.
@@ -34,7 +34,7 @@ class UnsupportedActionError(ValueError):
 
 class UnsupportedActionArgumentError(ValueError):
     """
-    Raised when a Rule has an action that seems to be a function call with 
+    Raised when a Rule has an action that seems to be a function call with
     argument(s) and one of these arguments has a type that is not supported.
     """
     # FIXME: add a link to the doc when it's written.

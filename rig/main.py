@@ -2,19 +2,19 @@
 # coding: utf-8
 
 
-__version__ = "0.wip"
-__author__ = "François Kubler <francois+rig@kubler.org>"
-__copyright__ = "Copyright (c) 2016 François Kubler"
-__license__ = "GPLv3"
-__url__ = "https://github.com/Frzk/Rig"
-
-
 import argparse
 import sys
 import warnings
 
 from .rig import Rig
 from .exceptions import NoRuleError
+
+
+__version__ = "0.wip"
+__author__ = ("François Kubler <francois+rig@kubler.org>",)
+__copyright__ = "Copyright (c) 2016 François Kubler"
+__license__ = "GPLv3"
+__url__ = "https://github.com/Frzk/Rig"
 
 
 def customized_warning(message, category=UserWarning, filename='', lineno=-1):
@@ -39,10 +39,11 @@ def read_cmdline():
     info = {
             "prog": "Rìg",
             "description": "%(prog)s version {0}".format(__version__),
-            "epilog": "For further help please head over to {0}".format(__url__),
+            "epilog": "For further help please head over to {0}"
+                      .format(__url__),
             "usage": argparse.SUPPRESS,
     }
-    
+
     argp = argparse.ArgumentParser(**info)
 
     # Add an optional string argument 'config':
@@ -50,7 +51,7 @@ def read_cmdline():
                       dest='config_file',
                       metavar='FILE',
                       help="read configuration from FILE",
-                      type=str);
+                      type=str)
 
     # Parse command line:
     args = argp.parse_args()

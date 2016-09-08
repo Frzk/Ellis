@@ -56,13 +56,13 @@ class SearchMatches():
     def _search(self, regex):
         """
         Actually searches for a match.
-        
-        Scans through self.msg looking for the first location where the given `regex object`_ produces a match.
-        
+
+        Scans through self.msg looking for the first location where the
+        given `regex object`_ produces a match.
+
         Returns a `match object`_ if the search is succesful or None otherwise.
 
         .. _regex object: https://docs.python.org/3/library/re.html#regular-expression-objets
         .. _match object: https://docs.python.org/3/library/re.html#match-objects
         """
         return regex.search(self.msg)
-
