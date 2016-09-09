@@ -45,7 +45,7 @@ class Matches(dict):
 
         return s
 
-    def add(self, rule, kwargs=None):
+    async def add(self, rule, kwargs=None):
         """
         Increments the counter for the given *rule* and *kwargs*.
 
@@ -60,7 +60,7 @@ class Matches(dict):
         index = self[rule.name].increment(kwargs)
 
         if self[rule.name][index] >= rule.limit:
-            rule.action.run(kwargs)
+            await rule.action.run(kwargs)
 
 
 class Counter(dict):

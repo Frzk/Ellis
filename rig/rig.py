@@ -176,7 +176,7 @@ class Rig(object):
         for rule in self.rules:
             async for match in SearchMatches(rule, message):
                 if match:
-                    self.matches.add(rule, match.groupdict())
+                    await self.matches.add(rule, match.groupdict())
 
         #     for match in rule.filter.search(message):
         #         if match:

@@ -115,30 +115,15 @@ class Action(object):
         if asyncio.iscoroutinefunction(self.func):
             task = asyncio.ensure_future(self.func(**self.args))
         else:
-            task = loop.run_in_executor(None,
-                                        functools.partial(self.func,
-                                                          **self.args))
+            # FIXME: is that clean enough ?
+            task = asyncio.get_event_loop() \
+                   .run_in_executor(None,
+                                    functools.partial(self.func,
+                                                      **self.args))
 
         return task
 
-    async def _run(self, task):
-        """
-        Actually executes the given *task*.
-
-        This function acts as a wrapper. This wrapper allows us to catch
-        Exceptions that might be raised during the execution of the Task.
-
-        *task* is a :class:`asyncio.Task` created with :func:`_prepare`.
-
-        .. seealso:: https://docs.python.org/3/library/asyncio-dev.html#detect-exceptions-never-consumed
-        """
-        try:
-            result = await task
-        except Exception as e:
-            # FIXME: write a better Exception handler.
-            print("EEXCC:\n  {0}".format(e))
-
-    def run(self, kwargs=None):
+    async def run(self, kwargs=None):
         """
         Wraps the action in a :class:`asyncio.Task` and schedules its 
         execution.
@@ -147,7 +132,12 @@ class Action(object):
         to the Action function.
         """
         task = self._prepare(kwargs)
-        asyncio.ensure_future(self._run(task))
+
+        try:
+            await task
+        except Exception as e:
+            # FIXME: write a better Exception handler.
+            print("EXC:\n  {0}".format(e))
 
     @classmethod
     def from_string(cls, action_str):
