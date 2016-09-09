@@ -6,8 +6,6 @@ import asyncio
 import configparser
 import os
 import signal
-import socket
-import sys
 import warnings
 
 from systemd import journal
@@ -20,7 +18,6 @@ from .search_matches import SearchMatches
 
 class Rig(object):
     """
-    
     """
     def __init__(self, config_file=None):
         """
@@ -80,7 +77,7 @@ class Rig(object):
         """
         Loads the Rules from the config file.
 
-        An invalid Rule (no Filter or no Action) will trigger a warning 
+        An invalid Rule (no Filter or no Action) will trigger a warning
         message and will be ignored.
         """
         for rule_name in self.config.sections():
@@ -123,7 +120,7 @@ class Rig(object):
         """
         Build a set of systemd units that Rìg will watch.
 
-        This set will be used to filter journald entries so that we only 
+        This set will be used to filter journald entries so that we only
         process entries that were produced by these units.
         This should result in better performance.
         """
@@ -139,8 +136,8 @@ class Rig(object):
                               "probably result in poor performance."
                               .format(rule.name))
 
-                # At this point,  we can clear `self.units` because in any 
-                # case, we will need to process every journald entries 
+                # At this point,  we can clear `self.units` because in any
+                # case, we will need to process every journald entries
                 # for THIS Rule.
                 self.units.clear()
 
@@ -166,9 +163,7 @@ class Rig(object):
         if op is journal.APPEND:
             for entry in journal_reader:
                 # print("{__REALTIME_TIMESTAMP} {MESSAGE}".format(**entry))
-                future = asyncio.ensure_future(
-                    self.process_entry(entry["MESSAGE"])
-                )
+                asyncio.ensure_future(self.process_entry(entry["MESSAGE"]))
 
     async def process_entry(self, message):
         """
@@ -177,10 +172,6 @@ class Rig(object):
             async for match in SearchMatches(rule, message):
                 if match:
                     await self.matches.add(rule, match.groupdict())
-
-        #     for match in rule.filter.search(message):
-        #         if match:
-        #             self.matches.increment(rule, match.groupdict())
 
     def start(self):
         """

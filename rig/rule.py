@@ -8,7 +8,7 @@ from .filter import Filter
 
 class Rule(object):
     """
-    A Rule is a combination of a :class:`filter.Filter` and an 
+    A Rule is a combination of a :class:`filter.Filter` and an
     :class:`action.Action`.
 
    """
@@ -18,18 +18,18 @@ class Rule(object):
 
         *name* is the name of the Rule. It helps you identify the Rule.
 
-        *filter* is a string containing the regular expressions that Rìg will 
+        *filter* is a string containing the regular expressions that Rìg will
         try to detect. It is converted in a :class:`filter.Filter` object.
 
         Each journald message that matches the *filter* increments a counter
         for the Rule. When *limit* is reached, the action is executed.
 
-        *action* is a string designating the action to execute when *limit* is 
+        *action* is a string designating the action to execute when *limit* is
         reached. It is converted in a :class:`action.Action` object.
 
         Raises ValueError if the limit is invalid (<=0, not an integer).
 
-        Raises ValueError if the *filter* can't be converted in a 
+        Raises ValueError if the *filter* can't be converted in a
         :class:`filter.Filter` object.
 
         Raises ValueError if the *action* can't be converted in a
@@ -99,9 +99,3 @@ class Rule(object):
             raise
 
         return self
-
-#    def run_action(self, kwargs=None):
-#        """
-#        Asks the :class:`action.Action` to run.
-#        """
-#        self.action.run(kwargs)

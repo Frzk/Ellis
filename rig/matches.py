@@ -4,13 +4,13 @@
 
 class Matches(dict):
     """
-    Matches is a simple dictionnary of :class:`Counter`s that keeps track of 
+    Matches is a simple dictionnary of :class:`Counter`s that keeps track of
     matching counts for all :class:`rule.Rule`s.
 
-    When a new entry appears in the journald log, it is tested against several 
-    :class:`rule.Rule`s :class:`filter.Filter`s. When a match is found, a 
-    counter for this match has to be incremented by one so Rìg can trigger 
-    the :class:`rule.Rule` :class:`action.Action` when the :class:`rule.Rule` 
+    When a new entry appears in the journald log, it is tested against several
+    :class:`rule.Rule`s :class:`filter.Filter`s. When a match is found, a
+    counter for this match has to be incremented by one so Rìg can trigger
+    the :class:`rule.Rule` :class:`action.Action` when the :class:`rule.Rule`
     limit is reached. Matches allows us to do that.
     """
     def __init__(self):
@@ -23,7 +23,7 @@ class Matches(dict):
         """
         Sets `self[key]` to a new :class:`Counter`.
 
-        *key* is a key that does not exist yet in self. It should be a 
+        *key* is a key that does not exist yet in self. It should be a
         :class:`rule.Rule` name.
 
         Returns the newly created element (a :class:`Counter` instance).
@@ -49,12 +49,12 @@ class Matches(dict):
         """
         Increments the counter for the given *rule* and *kwargs*.
 
-        If this pair of *rule* and *kwargs* doesn't already have a counter, it 
+        If this pair of *rule* and *kwargs* doesn't already have a counter, it
         is created.
 
         *rule* is the :class:`rule.Rule` instance that got the match.
 
-        *kwargs* is an optional dict of vars captured by the 
+        *kwargs* is an optional dict of vars captured by the
         :class:`filter.Filter` that match the log entry.
         """
         index = self[rule.name].increment(kwargs)
@@ -65,8 +65,8 @@ class Matches(dict):
 
 class Counter(dict):
     """
-    A Counter is a dict that keeps track of matching counts for **one specific 
-    :class:`rule.Rule`**.
+    A Counter is a dict that keeps track of matching counts for **one**
+    specific :class:`rule.Rule`.
     """
     def __init__(self):
         """
@@ -107,9 +107,9 @@ class Counter(dict):
 
         The counter index is computed from *kwargs*.
 
-        *kwargs* is an optional dict of vars captured by the 
-        :class:`filter.Filter` that match the log entry. An immutable version 
-        of *kwargs* is used as an index to keep track of several counters for 
+        *kwargs* is an optional dict of vars captured by the
+        :class:`filter.Filter` that match the log entry. An immutable version
+        of *kwargs* is used as an index to keep track of several counters for
         the same :class:`rule.Rule`. It can be `None`.
 
         Returns the index of the updated counter.

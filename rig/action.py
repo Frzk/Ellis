@@ -14,7 +14,7 @@ class Action(object):
     """
     An Action is what Rìg executes when a Rule reaches its limit.
 
-    It's mostly a function with parameters. i.e. an Action is valid if it is 
+    It's mostly a function with parameters. i.e. an Action is valid if it is
     *callable*.
 
     :Example of Actions:
@@ -24,23 +24,23 @@ class Action(object):
         * A function that uses iptable to ban an IP address, ...
 
     .. note::
-        Please use :func:`from_string` to create a new Action. This will make 
+        Please use :func:`from_string` to create a new Action. This will make
         sure it exists, it is imported and it is callable.
     """
     def __init__(self, module, func, args=None):
         """
-        Initializes a newly created Action with the given module name, 
+        Initializes a newly created Action with the given module name,
         function name and function arguments.
 
-        *module* is the name of the module containing the function. The module 
+        *module* is the name of the module containing the function. The module
         **must** be provided by the *actions* package to be imported.
 
         *func* is the name of the function to execute.
 
         *args* (optional) is a dict of arguments to pass to the function.
 
-        Raises :class:`exceptions.ValueError` if the given module can not be 
-        imported, if the given function doesn't exist in the given module or 
+        Raises :class:`exceptions.ValueError` if the given module can not be
+        imported, if the given function doesn't exist in the given module or
         if the Action is not valid (see :func:`is_valid`).
         """
         self.mod_name = module
@@ -56,7 +56,7 @@ class Action(object):
                               "(unable to import '{mod}' module from the "
                               "'actions' package)")
                              .format(mod=self.mod_name, func=self.func_name))
- 
+
         # If it succeeded, we can go on and try to retrieve the function from
         # the imported module:
         try:
@@ -92,7 +92,7 @@ class Action(object):
 
     def _prepare(self, kwargs=None):
         """
-        Updates the function arguments and creates a :class:`asyncio.Task` 
+        Updates the function arguments and creates a :class:`asyncio.Task`
         from the Action.
 
         *kwargs* is an optional dictionnary of additional arguments to pass to
@@ -102,7 +102,7 @@ class Action(object):
             *kwargs* will overwrite existing keys in *self.args*.
 
         .. note::
-            If the Action func is blocking (not a coroutine function), it will 
+            If the Action func is blocking (not a coroutine function), it will
             be executed in an `Executor`_.
 
         .. _Executor: https://docs.python.org/3/library/asyncio-eventloop.html#executor
@@ -125,10 +125,10 @@ class Action(object):
 
     async def run(self, kwargs=None):
         """
-        Wraps the action in a :class:`asyncio.Task` and schedules its 
+        Wraps the action in a :class:`asyncio.Task` and schedules its
         execution.
 
-        *kwargs* is an (optional) dictionnary of additional arguments to pass 
+        *kwargs* is an (optional) dictionnary of additional arguments to pass
         to the Action function.
         """
         task = self._prepare(kwargs)
@@ -145,27 +145,27 @@ class Action(object):
         Creates a new Action instance from the given string.
 
         The given string **must** match one of those patterns:
-        
+
             * module.function
             * module.function()
             * module.function(arg1=value1, arg2=value2)
 
         Any other form will trigger an Exception.
 
-        The function parses the given string and tries to load the function 
+        The function parses the given string and tries to load the function
         from the given module.
 
         Raises :class:`exceptions.SyntaxError` if the compiled source code is
         invalid.
 
-        Raises :class:`exceptions.ValueError` if the given source code contains 
+        Raises :class:`exceptions.ValueError` if the given source code contains
         null bytes.
 
-        Raises :class:`exceptions.UnsupportedActionError` if the given source 
+        Raises :class:`exceptions.UnsupportedActionError` if the given source
         code can not be parsed (doesn't match one of the supported patterns).
 
-        Raises :class:`exceptions.UnsupportedActionArgumentError` if one the 
-        given argument has an unsupported type (we only support 
+        Raises :class:`exceptions.UnsupportedActionArgumentError` if one the
+        given argument has an unsupported type (we only support
         :class:`ast.Num` and :class:`ast.Str`).
 
         Returns a new :class:`Action` instance.
@@ -180,12 +180,14 @@ class Action(object):
             call_obj = mod_obj.body[0].value
 
             if isinstance(call_obj, ast.Attribute):
-                # Seems like we have a simple function name (ie: `module.function`)
+                # Seems like we have a simple function name
+                # (for example `module.function`)
                 module = call_obj.value.id
                 func = call_obj.attr
-        
+
             elif isinstance(call_obj, ast.Call):
-                # Seems like we have a function call, maybe with some parameters.
+                # Seems like we have a function call, maybe with
+                # a few parameters.
                 # Note that we only support `module.function()` format.
                 # You can't use `function()`.
                 try:
@@ -202,7 +204,8 @@ class Action(object):
                         elif isinstance(kwarg.value, ast.Str):
                             args.update({kwarg.arg: kwarg.value.s})
                         else:
-                            raise UnsupportedActionArgumentError(action_str, kwarg)
+                            raise UnsupportedActionArgumentError(action_str,
+                                                                 kwarg)
 
             else:
                 raise UnsupportedActionError(action_str)
