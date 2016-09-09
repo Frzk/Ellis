@@ -46,7 +46,7 @@ class Ipset(object):
         # This is what ipset does (see the manpages).
         #
         # When an error occurs, ipset is supposed to print a message on stderr.
-        # This message is caught and transformed into an Exception 
+        # This message is caught and transformed into an Exception
         # by our `handle_error` method.
         #
         # So basically, this function should either return True or raise
@@ -89,7 +89,7 @@ class Ipset(object):
             raise IpsetError(msg)
 
 
-def ban(ip, ipset_name=None, timeout=None):
+async def ban(ip, ipset_name=None, timeout=None):
     """
     """
     if ipset_name is None:
@@ -99,4 +99,4 @@ def ban(ip, ipset_name=None, timeout=None):
 
     ipset = Ipset()
 
-    return ipset.add(ipset_name, ip)
+    return await ipset.add(ipset_name, ip)
