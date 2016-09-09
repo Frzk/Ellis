@@ -100,8 +100,8 @@ class Rule(object):
 
         return self
 
-    def run_action(self, kwargs=None):
-        """
-        Asks the :class:`action.Action` to run.
-        """
-        self.action.run(kwargs)
+#    def run_action(self, kwargs=None):
+#        """
+#        Asks the :class:`action.Action` to run.
+#        """
+#        self.action.run(kwargs)
