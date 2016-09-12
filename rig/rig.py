@@ -176,7 +176,7 @@ class Rig(object):
     def start(self):
         """
         """
-        print("Starting Rìg with {0} rule{1}."
+        print("Starting dev Rìg with {0} rule{1}."
               .format(len(self.rules), 's' if len(self.rules) > 1 else ''))
 
         with journal.Reader() as j:
