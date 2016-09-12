@@ -57,10 +57,11 @@ class Ipset(object):
         # to stderr. Hence the following construction:
         return True if proc.returncode is 0 else False
 
-    async def add(self, setname, ip):
+    async def add(self, setname, ip, timeout=0):
         """
         """
-        cmd = "ipset add {} {}".format(setname, ip)
+        cmd = ("ipset add -exist {} {} timeout {}"
+               .format(setname, ip, timeout))
 
         return await self.start(cmd)
 
@@ -89,14 +90,13 @@ class Ipset(object):
             raise IpsetError(msg)
 
 
-async def ban(ip, ipset_name=None, timeout=None):
+async def ban(ip, ipset_name=None, timeout=0):
     """
     """
     if ipset_name is None:
         ipset_name = "rig_blacklist"
 
-    # FIXME: timeout.
-
     ipset = Ipset()
+    print("Adding {0} to {1}".format(ip, ipset_name))
 
-    return await ipset.add(ipset_name, ip)
+    return await ipset.add(ipset_name, ip, timeout)
