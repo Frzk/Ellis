@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import asyncio
+import ipaddress
 
 from asyncio.subprocess import PIPE
 
@@ -60,8 +61,8 @@ class Ipset(object):
     async def add(self, setname, ip, timeout=0):
         """
         """
-        cmd = ("ipset add -exist {} {} timeout {}"
-               .format(setname, ip, timeout))
+        cmd = "ipset add -exist {} {} timeout {}" \
+              .format(setname, ip, timeout)
 
         return await self.start(cmd)
 
@@ -74,6 +75,40 @@ class Ipset(object):
             cmd = "{} {}".format(cmd, setname)
 
         return await self.start(cmd)
+
+    def chose_blacklist(self, ip):
+        """
+        Given an IP address, figure out the ipset we have to use.
+
+        If the address is an IPv4, we have to use `self.blacklist4`.
+        If the address is an IPv6, we have to use `self.blacklist6`.
+
+        Raises ipaddress.AddressValueError if the address is neither
+        an IPv4 nor an IPv6.
+        """
+        blacklist = 'rig_blacklist{0}'
+
+        try:
+            address = ipaddress.ip_address(ip)
+        except AddressValueError:
+            raise
+        else:
+            if address.version is 6:
+                # We don't ban private IPv6:
+                if address.is_private:
+                    msg = "We don't ban private addresses ({0} given)." \
+                          .format(address)
+                    raise ipaddress.AddressValueError(msg)
+                else:
+                    # Do we have an embedded IPv4 ?
+                    if address.ipv4_mapped is not None:
+                        address = address.ipv4_mapped
+                    elif address.sixtofour is not None:
+                        address = address.sixtofour
+
+        blacklist = blacklist.format(address.version)
+
+        return (address, blacklist)
 
     def handle_error(self, err):
         """
@@ -90,13 +125,11 @@ class Ipset(object):
             raise IpsetError(msg)
 
 
-async def ban(ip, ipset_name=None, timeout=0):
+async def ban(ip, timeout=0):
     """
     """
-    if ipset_name is None:
-        ipset_name = "rig_blacklist"
-
     ipset = Ipset()
-    print("Adding {0} to {1}".format(ip, ipset_name))
+    address, ipset_name = ipset.chose_blacklist(ip)
+    print("Adding {0} to {1}".format(address, ipset_name))
 
-    return await ipset.add(ipset_name, ip, timeout)
+    return await ipset.add(ipset_name, address, timeout)
