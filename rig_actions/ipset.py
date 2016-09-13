@@ -129,7 +129,7 @@ async def ban(ip, timeout=0):
     """
     """
     ipset = Ipset()
-    ipset_name, address = ipset.chose_blacklist(ip)
+    address, ipset_name = ipset.chose_blacklist(ip)
     print("Adding {0} to {1}".format(address, ipset_name))
 
     return await ipset.add(ipset_name, address, timeout)
