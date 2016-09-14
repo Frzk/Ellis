@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import asyncio
 import ipaddress
 
-from asyncio.subprocess import PIPE
+from rig.shell_commander import ShellCommander
 
 
 class IpsetError(Exception):
@@ -23,40 +22,13 @@ class IpsetAlreadyInSet(Exception):
     pass
 
 
-class Ipset(object):
+class Ipset(ShellCommander):
     """
     """
     def __init__(self):
         """
         """
-        pass
-
-    async def start(self, cmd):
-        """
-        """
-        proc = await asyncio.create_subprocess_shell(cmd, stderr=PIPE)
-        stdout_data, stderr_data = await proc.communicate()
-
-        if stdout_data:
-            print(stdout_data)
-
-        if stderr_data:
-            self.handle_error(stderr_data)
-
-        # Shell commands are supposed to return 0 on success.
-        # This is what ipset does (see the manpages).
-        #
-        # When an error occurs, ipset is supposed to print a message on stderr.
-        # This message is caught and transformed into an Exception
-        # by our `handle_error` method.
-        #
-        # So basically, this function should either return True or raise
-        # an Exception.
-        #
-        # However, we'd better be careful and still handle the hypothetic
-        # case where ipset would not return 0 and would not print anything
-        # to stderr. Hence the following construction:
-        return True if proc.returncode is 0 else False
+        super().__init__()
 
     async def add(self, setname, ip, timeout=0):
         """
@@ -90,7 +62,7 @@ class Ipset(object):
 
         try:
             address = ipaddress.ip_address(ip)
-        except AddressValueError:
+        except ipaddress.AddressValueError:
             raise
         else:
             if address.version is 6:
