@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import asyncio
+import shlex
 
 from asyncio.subprocess import PIPE
 
@@ -14,10 +15,16 @@ class ShellCommander(object):
         """
         pass
 
-    async def start(self, cmd):
+    async def start(self, cmd, *cmd_args):
         """
         """
-        proc = await asyncio.create_subprocess_shell(cmd, stderr=PIPE)
+        # Make sure the provided arguments are safe:
+        args = ShellCommander.escape_args(cmd_args)
+        print("Executing {0} with args: {1}".format(cmd, args))
+        command = "{} {}".format(cmd, " ".join(args))
+
+        # And then launch the command:
+        proc = await asyncio.create_subprocess_shell(command, stderr=PIPE)
         stdout_data, stderr_data = await proc.communicate()
 
         if stdout_data:
@@ -38,3 +45,13 @@ class ShellCommander(object):
         msg = ("You have to overwrite this method and provide your own"
                " implementation in your subclass.")
         raise NotImplementedError(msg)
+
+    @classmethod
+    def escape_args(*args):
+        """
+        Returns a list of shell-escaped arguments.
+
+        Removes whitespaces and shell metacharacters for each argument
+        in given args.
+        """
+        return [shlex.quote(arg) for arg in args]
