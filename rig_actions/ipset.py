@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import asyncio
 import ipaddress
 
-from asyncio.subprocess import PIPE
+from rig.shell_commander import ShellCommander
 
 
 class IpsetError(Exception):
@@ -23,65 +22,57 @@ class IpsetAlreadyInSet(Exception):
     pass
 
 
-class Ipset(object):
+class Ipset(ShellCommander):
     """
     """
+    CMD = 'ipset'
+
     def __init__(self):
         """
         """
-        pass
-
-    async def start(self, cmd):
-        """
-        """
-        proc = await asyncio.create_subprocess_shell(cmd, stderr=PIPE)
-        stdout_data, stderr_data = await proc.communicate()
-
-        if stdout_data:
-            print(stdout_data)
-
-        if stderr_data:
-            self.handle_error(stderr_data)
-
-        # Shell commands are supposed to return 0 on success.
-        # This is what ipset does (see the manpages).
-        #
-        # When an error occurs, ipset is supposed to print a message on stderr.
-        # This message is caught and transformed into an Exception
-        # by our `handle_error` method.
-        #
-        # So basically, this function should either return True or raise
-        # an Exception.
-        #
-        # However, we'd better be careful and still handle the hypothetic
-        # case where ipset would not return 0 and would not print anything
-        # to stderr. Hence the following construction:
-        return True if proc.returncode is 0 else False
+        super().__init__()
 
     async def add(self, setname, ip, timeout=0):
         """
-        """
-        cmd = "ipset add -exist {} {} timeout {}" \
-              .format(setname, ip, timeout)
+        Adds the given IP address to the given ipset.
+        
+        If a timeout is given, the IP will stay in the ipset for
+        the given duration. Else it's added forever.
 
-        return await self.start(cmd)
+        The resulting command looks like this:
+
+        ``ipset add -exist rig_blacklist4 192.0.2.10 timeout 14400``
+
+        """
+        args = ['add', '-exist', setname, ip, 'timeout', timeout]
+
+        return await self.start(__class__.CMD, *args)
 
     async def list(self, setname=None):
         """
+        Lists the existing ipsets.
+
+        If setname is given, only lists this ipset.
+
+        The resulting command looks like one of the following:
+        
+        * ``ipset list``
+        * ``ipset list rig_blacklist4``
+
         """
-        cmd = "ipset list"
+        args = ['list']
 
         if setname is not None:
-            cmd = "{} {}".format(cmd, setname)
+            args.append(setname)
 
-        return await self.start(cmd)
+        return await self.start(__class__.CMD, *args)
 
     def chose_blacklist(self, ip):
         """
         Given an IP address, figure out the ipset we have to use.
 
-        If the address is an IPv4, we have to use `self.blacklist4`.
-        If the address is an IPv6, we have to use `self.blacklist6`.
+        If the address is an IPv4, we have to use *rig_blacklist4*.
+        If the address is an IPv6, we have to use *rig_blacklist6*.
 
         Raises ipaddress.AddressValueError if the address is neither
         an IPv4 nor an IPv6.
@@ -90,7 +81,7 @@ class Ipset(object):
 
         try:
             address = ipaddress.ip_address(ip)
-        except AddressValueError:
+        except ipaddress.AddressValueError:
             raise
         else:
             if address.version is 6:
