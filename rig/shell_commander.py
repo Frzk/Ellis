@@ -18,10 +18,12 @@ class ShellCommander(object):
     async def start(self, cmd, *cmd_args):
         """
         """
+        command = cmd
+
         # Make sure the provided arguments are safe:
-        args = ShellCommander.escape_args(cmd_args)
-        print("Executing {0} with args: {1}".format(cmd, args))
-        command = "{} {}".format(cmd, " ".join(args))
+        if cmd_args:
+            args = __class__.escape_args(*cmd_args)
+            command = "{} {}".format(command, args)
 
         # And then launch the command:
         proc = await asyncio.create_subprocess_shell(command, stderr=PIPE)
@@ -47,11 +49,15 @@ class ShellCommander(object):
         raise NotImplementedError(msg)
 
     @classmethod
-    def escape_args(*args):
+    def escape_args(cls, *args):
         """
-        Returns a list of shell-escaped arguments.
+        Transforms the given list of unescaped arguments into a
+        suitable, shell-escaped str that is ready to be append
+        to the command.
 
         Removes whitespaces and shell metacharacters for each argument
         in given args.
         """
-        return [shlex.quote(arg) for arg in args]
+        escaped_args = [shlex.quote(str(arg)) for arg in args]
+
+        return " ".join(escaped_args)

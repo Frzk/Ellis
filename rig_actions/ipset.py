@@ -46,7 +46,7 @@ class Ipset(ShellCommander):
         """
         args = ['add', '-exist', setname, ip, 'timeout', timeout]
 
-        return await self.start(__class__.CMD, args)
+        return await self.start(__class__.CMD, *args)
 
     async def list(self, setname=None):
         """
@@ -65,7 +65,7 @@ class Ipset(ShellCommander):
         if setname is not None:
             args.append(setname)
 
-        return await self.start(__class__.CMD, args)
+        return await self.start(__class__.CMD, *args)
 
     def chose_blacklist(self, ip):
         """
@@ -123,4 +123,4 @@ async def ban(ip, timeout=0):
     address, ipset_name = ipset.chose_blacklist(ip)
     print("Adding {0} to {1}".format(address, ipset_name))
 
-    return await ipset.add(ipset_name, str(address), timeout)
+    return await ipset.add(ipset_name, address, timeout)
