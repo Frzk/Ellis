@@ -3,7 +3,7 @@
 
 import ipaddress
 
-from rig.shell_commander import ShellCommander
+from .shell_commander import ShellCommander
 
 
 class IpsetError(Exception):
