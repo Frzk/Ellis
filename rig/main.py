@@ -10,7 +10,7 @@ from .rig import Rig
 from .exceptions import NoRuleError
 
 
-__version__ = "0.wip"
+__version__ = "1.0.dev1"
 __author__ = ("François Kubler <francois+rig@kubler.org>",)
 __copyright__ = "Copyright (c) 2016 François Kubler"
 __license__ = "GPLv3"
