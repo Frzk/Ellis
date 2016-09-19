@@ -32,7 +32,7 @@ class Filter(list):
 
         Currently, :class:`Filter` supports 2 tags :
 
-            * <IPV4> : matches a valid IPv4 address.
+            * <IP> : matches both IPv4 and IPv6 addresses (and more).
             * <PORT> : matches a valid port number (1..65534).
 
     .. note::
@@ -42,16 +42,6 @@ class Filter(list):
 
     known_tags = {
         '<IP>': ('\S+'),
-
-        '<IPV4>': (r'((([0-9]'          # 0..9
-                   r'|[1-9][0-9]'       # 10..99
-                   r'|1[0-9]{2}'        # 100..199
-                   r'|2[0-4][0-9]'      # 200..249
-                   r'|25[0-5])'         # 250..255
-                   r'\.)'               # . (dot)
-                   r'{3}'               # 3 times, so 0.0.0. to 255.255.255.
-                   # And again, 0 to 255, without the ending dot:
-                   r'([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))'),
 
         '<PORT>': (r'([1-9]'            # 1..9
                    r'|[1-9][0-9]{1,3}'  # 10..9999
