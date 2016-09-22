@@ -21,9 +21,9 @@ Rìg specifically focuses on systemd-journald. It's written in Python and uses t
 Features
 ========
 
-* Monitors ``journald`` logs for given patterns ;
-* Executes given commands when a pattern has been detected for the same IP address more than *x* times ;
-* Uses ``ipset`` to block traffic from malicious hosts ;
+* Monitors systemd-journald_ logs for given patterns ;
+* Executes given commands when a pattern has been detected more than *N* times ;
+* Uses ipset_ to block traffic from malicious hosts ;
 * Handles multiple services (or systemd-units) ;
 * Single, simple config file.
 
@@ -37,4 +37,5 @@ Code reviews, patches, comments, bug reports and feature requests are welcome. P
 .. _Intrusion Prevention System (IPS): https://en.wikipedia.org/wiki/Intrusion_prevention_system
 .. _Python's asyncio framework: https://docs.python.org/3/library/asyncio.html
 .. _fail2ban: http://www.fail2ban.org/
+.. _ipset: http://ipset.netfilter.org/
 .. _Contributing guide: CONTRIBUTING.rst
