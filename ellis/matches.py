@@ -9,7 +9,7 @@ class Matches(dict):
 
     When a new entry appears in the journald log, it is tested against several
     :class:`rule.Rule`s :class:`filter.Filter`s. When a match is found, a
-    counter for this match has to be incremented by one so Rìg can trigger
+    counter for this match has to be incremented by one so Ellis can trigger
     the :class:`rule.Rule` :class:`action.Action` when the :class:`rule.Rule`
     limit is reached. Matches allows us to do that.
     """

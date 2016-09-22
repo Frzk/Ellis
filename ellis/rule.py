@@ -18,8 +18,9 @@ class Rule(object):
 
         *name* is the name of the Rule. It helps you identify the Rule.
 
-        *filter* is a string containing the regular expressions that Rìg will
-        try to detect. It is converted in a :class:`filter.Filter` object.
+        *filter* is a string containing the regular expressions that Ellis
+        will try to detect. It is converted in a :class:`filter.Filter`
+        object.
 
         Each journald message that matches the *filter* increments a counter
         for the Rule. When *limit* is reached, the action is executed.

@@ -6,15 +6,15 @@ import argparse
 import sys
 import warnings
 
-from .rig import Rig
+from .ellis import Ellis
 from .exceptions import NoRuleError
 
 
 __version__ = "1.0.dev1"
-__author__ = ("François Kubler <francois+rig@kubler.org>",)
+__author__ = ("François Kubler <francois+ellis@kubler.org>",)
 __copyright__ = "Copyright (c) 2016 François Kubler"
 __license__ = "GPLv3"
-__url__ = "https://github.com/Frzk/Rig"
+__url__ = "https://github.com/Frzk/Ellis"
 
 
 def customized_warning(message, category=UserWarning, filename='', lineno=-1):
@@ -37,7 +37,7 @@ def read_cmdline():
     Parses optional command line arguments.
     """
     info = {
-            "prog": "Rìg",
+            "prog": "Ellis",
             "description": "%(prog)s version {0}".format(__version__),
             "epilog": "For further help please head over to {0}"
                       .format(__url__),
@@ -61,7 +61,7 @@ def read_cmdline():
 
 def main():
     """
-    Entry point for Rìg.
+    Entry point for Ellis.
     """
     # Monkey patch warnings.showwarning:
     warnings.showwarning = customized_warning
@@ -73,10 +73,10 @@ def main():
     config_file = args['config_file']
 
     try:
-        rig = Rig(config_file)
+        ellis = Ellis(config_file)
     except NoRuleError:
         msg = ("There are no valid rules in the config file. "
-               "Rig can not run without rules.")
+               "Ellis can not run without rules.")
         print_err(msg)
     else:
-        rig.start()
+        ellis.start()

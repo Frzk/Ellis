@@ -1,22 +1,22 @@
-=====
- Rìg
-=====
+=======
+ Ellis
+=======
 
-Rìg monitors systemd-journald_ logs for specific entries and triggers actions based on them.
+Ellis monitors systemd-journald_ logs for specific entries and triggers actions based on them.
 
-Rìg can obviously be used as an `Intrusion Prevention System (IPS)`_ but can also be used in a more general way to run a Python script whenever a pattern appears in the logs.
+Ellis can obviously be used as an `Intrusion Prevention System (IPS)`_ but can also be used in a more general way to run a Python script whenever a pattern appears in the logs.
 
 About
 =====
 
-I started Rìg as a pet project with two ideas in mind:
+I started Ellis as a pet project with two ideas in mind:
 
 * I wanted to build something based on `Python's asyncio framework`_ because it looked very interesting and powerful - I needed to learn more about it ! ;
 * I also wanted to be warned whenever someone would successfully log on my PC through SSH.
 
 And then I realized that the combination of these two ideas would make a perfect candidate ! It then evolved into something more generic that looks a lot like the well-known fail2ban_.
 
-Rìg specifically focuses on systemd-journald. It's written in Python and uses the asyncio framework for better performance (well, I hope so).
+Ellis specifically focuses on systemd-journald. It's written in Python and uses the asyncio framework for better performance (well, I hope so).
 
 Features
 ========

@@ -12,7 +12,7 @@ from .exceptions import UnsupportedActionError, UnsupportedActionArgumentError
 
 class Action(object):
     """
-    An Action is what Rìg executes when a Rule reaches its limit.
+    An Action is what Ellis executes when a Rule reaches its limit.
 
     It's mostly a function with parameters. i.e. an Action is valid if it is
     *callable*.
@@ -50,11 +50,11 @@ class Action(object):
 
         # Let's try to import the required module from the 'actions' package:
         try:
-            mod = importlib.import_module("rig_actions." + self.mod_name)
+            mod = importlib.import_module("ellis_actions." + self.mod_name)
         except ImportError:
             raise ValueError(("Provided action ({mod}.{func}) does not exist "
                               "(unable to import '{mod}' module from the "
-                              "'actions' package)")
+                              "'ellis_actions' package)")
                              .format(mod=self.mod_name, func=self.func_name))
 
         # If it succeeded, we can go on and try to retrieve the function from

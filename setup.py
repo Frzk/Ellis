@@ -7,36 +7,36 @@ import re
 from setuptools import setup
 
 
-# Get version from `rig/main.py`:
+# Get version from `ellis/main.py`:
 version = re.search('^__version__\s*=\s*"(.*)"',
-                    open('rig/main.py').read(),
+                    open('ellis/main.py').read(),
                     re.M) \
             .group(1)
 
 
-setup(name='rig',
+setup(name='ellis',
       version=version,
-      description='Rìg monitors systemd-journald and triggers actions.',
-      url='http://github.com/Frzk/Rig',
+      description='Ellis monitors systemd-journald and triggers actions.',
+      url='http://github.com/Frzk/Ellis',
       author='François KUBLER',
-      author_email='francois+rig@kubler.org',
+      author_email='francois+ellis@kubler.org',
 
       entry_points={
-          "console_scripts": ['rig = rig.main:main']
+          "console_scripts": ['ellis = ellis.main:main']
       },
 
       # data_files=[
-      #     ('/usr/lib/systemd/system', ['rig.service']),
+      #     ('/usr/lib/systemd/system', ['ellis.service']),
       # ],
 
       packages=[
-          'rig',
-          'rig_actions'
+          'ellis',
+          'ellis_actions'
       ],
 
       classifiers=[
           'Development Status :: 2 - Pre-Alpha',
-          'Environnement :: Console',
+          'Environment :: Console',
           'Intended Audience :: System Administrators',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Operating System :: POSIX :: Linux',

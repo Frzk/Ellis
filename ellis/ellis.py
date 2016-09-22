@@ -16,12 +16,12 @@ from .rule import Rule
 from .search_matches import SearchMatches
 
 
-class Rig(object):
+class Ellis(object):
     """
     """
     def __init__(self, config_file=None):
         """
-        Initializes a newly created Rig object.
+        Initializes a newly created Ellis object.
 
         The initialization process takes care of reading the configuration
         file and build the necessary parts (rules, systemd units to watch,...)
@@ -44,29 +44,29 @@ class Rig(object):
 
     def load_config(self, config_file=None):
         """
-        If `config_file` is not None, tries to load Rìg configuration from
+        If `config_file` is not None, tries to load Ellis configuration from
         the given location. If, for some reason,  the file can't be read,
-        Rìg will not start.
+        Ellis will not start.
 
         If no configuration file is given (`config_file` is None), tries to
-        load Rìg configuration from these potential locations,
+        load Ellis configuration from these potential locations,
         in this specific order:
 
-            1. `/etc/rig.conf`
-            2. `/etc/rig/rig.conf`
-            3. `./rig.conf`
+            1. `/etc/ellis.conf`
+            2. `/etc/ellis/ellis.conf`
+            3. `./ellis.conf`
 
         If more than one of these files exist, the configuration is merged
         which can lead to one or more section(s) being overriden.
 
-        The last file (`./rig.conf`) takes precedence over the second one,
+        The last file (`./ellis.conf`) takes precedence over the second one,
         which takes precedence over the first one.
         """
         if config_file is None:
             config_file = [
-                '/etc/rig.conf',
-                '/etc/rig/rig.conf',
-                os.path.join(os.path.dirname(__file__), 'rig.conf'),
+                '/etc/ellis.conf',
+                '/etc/ellis/ellis.conf',
+                os.path.join(os.path.dirname(__file__), 'ellis.conf'),
             ]
 
         self.config.read(config_file, encoding='utf-8')
@@ -118,7 +118,7 @@ class Rig(object):
 
     def load_units(self):
         """
-        Build a set of systemd units that Rìg will watch.
+        Build a set of systemd units that Ellis will watch.
 
         This set will be used to filter journald entries so that we only
         process entries that were produced by these units.
@@ -176,7 +176,7 @@ class Rig(object):
     def start(self):
         """
         """
-        print("Starting dev Rìg with {0} rule{1}."
+        print("Starting Ellis with {0} rule{1}."
               .format(len(self.rules), 's' if len(self.rules) > 1 else ''))
 
         with journal.Reader() as j:
@@ -217,7 +217,7 @@ class Rig(object):
         """
         """
         # FIXME: do we still need that ?
-        #     test as soon as Rig is really processing entries.
+        #     test as soon as Ellis is really processing entries.
 
         # pendings = asyncio.Task.all_tasks()
 

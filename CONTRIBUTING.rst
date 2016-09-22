@@ -5,7 +5,7 @@
 Pull Requests
 =============
 
-1. Fork the Rìg repository
+1. Fork the Ellis repository
 2. Create a new branch for each feature or improvement
 3. Send a pull request from each feature branch to the **develop** branch
 
@@ -37,4 +37,4 @@ Enhancement Requests are only for **EXISTING** features. For a new feature, plea
 2. Add the ``enhancement`` label to the issue
 3. Describe your idea
 
-.. _here: https://github.com/Frzk/Rig/issues
+.. _here: https://github.com/Frzk/Ellis/issues

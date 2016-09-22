@@ -7,7 +7,7 @@ import ast
 
 class NoRuleError(Exception):
     """
-    Raised when Rìg is started without Rule.
+    Raised when Ellis is started without Rule.
 
     Possible cases :
         - The config file doesn't define any Rule.
