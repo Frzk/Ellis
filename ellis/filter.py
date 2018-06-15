@@ -110,7 +110,7 @@ class Filter(list):
 
         for f in filter_str.splitlines():
             try:
-                regex = re.compile(f, re.MULTILINE)
+                regex = re.compile(f, flags=re.MULTILINE|re.IGNORECASE)
             except sre_constants.error:
                 warnings.warn("Unable to compile this pattern: \"{0}\". "
                               "It will be ignored"
