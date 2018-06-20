@@ -232,11 +232,13 @@ class Ellis(object):
     def exceptions_handler(self, loop, context):
         """
         """
+        exception = context['exception']
+
         print("CAUGHT EXCEPTION:\n")
         print("  Message: {0}\n".format(context['message']))
 
         try:
-            print("  Exception: {0}\n".format(context['exception']))
-            print("  Future: {0}".format(context['future']))
+            print("  Future: {0}\n".format(context['future']))
+            print("  Exception: {0}".format(exception))
         except:
             pass

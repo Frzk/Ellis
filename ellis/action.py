@@ -137,7 +137,7 @@ class Action(object):
             await task
         except Exception as e:
             # FIXME: write a better Exception handler.
-            print("EXC:\n  {0}".format(e))
+            raise e
 
     @classmethod
     def from_string(cls, action_str):

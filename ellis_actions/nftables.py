@@ -6,70 +6,46 @@ import ipaddress
 from .shell_commander import ShellCommander
 
 
-class IpsetError(Exception):
+class NFTablesSetNotFound(Exception):
     pass
 
 
-class IpsetNoRights(Exception):
-    pass
-
-
-class IpsetSetNotFound(Exception):
-    pass
-
-
-class IpsetAlreadyInSet(Exception):
-    pass
-
-
-class Ipset(ShellCommander):
+class NFTables(ShellCommander):
     """
     """
-    CMD = 'ipset'
+    CMD = 'nft'
 
-    def __init__(self):
+    def __init__(self, tablename):
         """
         """
         super().__init__()
 
-    async def add(self, setname, ip, timeout=0):
+        self.tablename = tablename
+
+    async def add(self, setname, ip, timeout):
         """
-        Adds the given IP address to the given ipset.
-        
-        If a timeout is given, the IP will stay in the ipset for
-        the given duration. Else it's added forever.
+        Adds the given IP address to the specified set.
+
+        If timeout is specified, the IP will stay in the set for the given
+        duration. Else it will stay in the set during the set default timeout.
+
+        timeout must be given in seconds.
 
         The resulting command looks like this:
 
-        ``ipset add -exist ellis_blacklist4 192.0.2.10 timeout 14400``
+        ``nft add element inet firewall ellis_blacklist4 { 192.0.2.10 timeout 30s }``
 
         """
-        args = ['add', '-exist', setname, ip, 'timeout', timeout]
+        # We have to double-quote the '{' '}' at both ends for `format` to work.
+        to_ban = "{{ {0} timeout {1}s }}".format(ip, timeout)
 
-        return await self.start(__class__.CMD, *args)
-
-    async def list(self, setname=None):
-        """
-        Lists the existing ipsets.
-
-        If setname is given, only lists this ipset.
-
-        The resulting command looks like one of the following:
-        
-        * ``ipset list``
-        * ``ipset list ellis_blacklist4``
-
-        """
-        args = ['list']
-
-        if setname is not None:
-            args.append(setname)
+        args = ['add', 'element', 'inet', self.tablename, setname, to_ban]
 
         return await self.start(__class__.CMD, *args)
 
     def chose_blacklist(self, ip):
         """
-        Given an IP address, figure out the ipset we have to use.
+        Given an IP address, figure out the set we have to use.
 
         If the address is an IPv4, we have to use *ellis_blacklist4*.
         If the address is an IPv6, we have to use *ellis_blacklist6*.
@@ -106,6 +82,8 @@ class Ipset(ShellCommander):
         """
         msg = err.decode()
 
+        print("FIXME (raise a custom  Exception) - {}".format(msg))
+        """
         if "Kernel error received: Operation not permitted" in msg:
             raise IpsetNoRights(msg)
         elif "The set with the given name does not exist" in msg:
@@ -114,13 +92,14 @@ class Ipset(ShellCommander):
             raise IpsetAlreadyInSet(msg)
         else:
             raise IpsetError(msg)
+        """
 
 
-async def ban(ip, timeout=0):
+async def ban(ip, table='filter', timeout=600):
     """
     """
-    ipset = Ipset()
-    address, ipset_name = ipset.chose_blacklist(ip)
-    print("Adding {0} to {1}".format(address, ipset_name))
+    nft = NFTables(table)
+    address, set_name = nft.chose_blacklist(ip)
+    print("Adding {0} to {1}:{2}".format(address, table, set_name))
 
-    return await ipset.add(ipset_name, address, timeout)
+    return await nft.add(set_name, address, timeout)

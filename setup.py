@@ -48,6 +48,6 @@ setup(name='ellis',
       ],
 
       install_requires=[
-          'smtplibaio >= 1.0.4',
+          'smtplibaio >= 2.0.1',
           'systemd-python >= 231',
       ])

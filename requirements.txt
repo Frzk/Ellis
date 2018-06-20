@@ -1,2 +1,2 @@
-python-systemd==231
-smtplibaio==1.0.4
+systemd-python>=231
+smtplibaio>=2.0.1
