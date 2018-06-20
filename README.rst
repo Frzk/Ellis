@@ -23,9 +23,15 @@ Features
 
 * Monitors systemd-journald_ logs for given patterns ;
 * Executes given commands when a pattern has been detected more than *N* times ;
-* Uses ipset_ to block traffic from malicious hosts ;
+* Uses ipset_ or nftables_ to block traffic from malicious hosts ;
+* Can send e-mails to warn you about something ;
 * Handles multiple services (or systemd-units) ;
 * Single, simple config file.
+
+Installing and configuring
+==========================
+
+Please read the Wiki_.
 
 Contributing / Helping
 ======================
@@ -38,4 +44,6 @@ Code reviews, patches, comments, bug reports and feature requests are welcome. P
 .. _Python's asyncio framework: https://docs.python.org/3/library/asyncio.html
 .. _fail2ban: http://www.fail2ban.org/
 .. _ipset: http://ipset.netfilter.org/
+.. _nftables: https://netfilter.org/projects/nftables/
+.. _Wiki: https://github.com/Frzk/Ellis/wiki
 .. _Contributing guide: CONTRIBUTING.rst
