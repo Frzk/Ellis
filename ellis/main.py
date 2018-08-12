@@ -17,7 +17,8 @@ __license__ = "GPLv3"
 __url__ = "https://github.com/Frzk/Ellis"
 
 
-def customized_warning(message, category=UserWarning, filename='', lineno=-1):
+def customized_warning(message, category=UserWarning,
+                       filename='', lineno=-1, file=None, line=None):
     """
     Customized function to display warnings.
     Monkey patch for `warnings.showwarning`.
