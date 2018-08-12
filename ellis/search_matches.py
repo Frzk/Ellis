@@ -25,7 +25,7 @@ class SearchMatches():
         self._regexes = iter(rule.filter)
         self._loop = asyncio.get_event_loop()
 
-    async def __aiter__(self):
+    def __aiter__(self):
         """
         """
         return self
