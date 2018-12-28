@@ -15,12 +15,13 @@ class NFTables(ShellCommander):
     """
     CMD = 'nft'
 
-    def __init__(self, tablename):
+    def __init__(self, table_family, table_name):
         """
         """
         super().__init__()
 
-        self.tablename = tablename
+        self.table_family = table_family
+        self.table_name = table_name
 
     async def add(self, setname, ip, timeout):
         """
@@ -37,9 +38,12 @@ class NFTables(ShellCommander):
 
         """
         # We have to double-quote the '{' '}' at both ends for `format` to work.
-        to_ban = "{{ {0} timeout {1}s }}".format(ip, timeout)
+        if timeout > 0:
+            to_ban = "{{ {0} timeout {1}s }}".format(ip, timeout)
+        else:
+            to_ban = "{{ {0} }}".format(ip)
 
-        args = ['add', 'element', 'inet', self.tablename, setname, to_ban]
+        args = ['add', 'element', self.table_family, self.table_name, setname, to_ban]
 
         return await self.start(__class__.CMD, *args)
 
@@ -95,11 +99,11 @@ class NFTables(ShellCommander):
         """
 
 
-async def ban(ip, table='filter', timeout=600):
+async def ban(ip, family='ip', table='filter', timeout=0):
     """
     """
-    nft = NFTables(table)
+    nft = NFTables(family, table)
     address, set_name = nft.chose_blacklist(ip)
-    print("Adding {0} to {1}:{2}".format(address, table, set_name))
+    print("Adding {0} to {1} {2} @{3}".format(address, family, table, set_name))
 
     return await nft.add(set_name, address, timeout)
