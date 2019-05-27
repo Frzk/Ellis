@@ -38,9 +38,21 @@ class Ellis(object):
 
         # If we have rules, we can setup the matches object and the loop.
         # If not, an exception should have been raised.
+        self.journal_reader = journal.Reader()
         self.matches = Matches()
         self.loop = asyncio.get_event_loop()
         self.loop.set_exception_handler(self.exceptions_handler)
+
+    def __enter__(self):
+        """
+        """
+        return self.start()
+
+    def __exit__(self, exc_type=None, exc_value=None, exc_tb=None):
+        """
+        """
+        # FIXME: handle exceptions.
+        self.exit()
 
     def load_config(self, config_file=None):
         """
@@ -155,13 +167,13 @@ class Ellis(object):
 
         return self
 
-    def reader(self, journal_reader):
+    def reader(self):
         """
         """
-        op = journal_reader.process()
+        op = self.journal_reader.process()
 
         if op is journal.APPEND:
-            for entry in journal_reader:
+            for entry in self.journal_reader:
                 # print("{__REALTIME_TIMESTAMP} {MESSAGE}".format(**entry))
                 asyncio.ensure_future(self.process_entry(entry["MESSAGE"]))
 
@@ -179,55 +191,40 @@ class Ellis(object):
         print("Starting Ellis with {0} rule{1}."
               .format(len(self.rules), 's' if len(self.rules) > 1 else ''))
 
-        with journal.Reader() as j:
-            # Configure our journal:
-            j.log_level(journal.LOG_INFO)
+        # Configure our journal:
+        self.journal_reader.log_level(journal.LOG_INFO)
 
-            # And seek to the end so we can get new messages:
-            j.seek_tail()
-            j.get_previous()
+        # And seek to the end so we can get new messages:
+        self.journal_reader.seek_tail()
+        self.journal_reader.get_previous()
 
-            # DEBUG MODE:
-            # self.loop.set_debug(True)
+        # DEBUG MODE:
+        # self.loop.set_debug(True)
 
-            # Configure our journald reader to watch only some units:
-            for unit in self.units:
-                j.add_match(_SYSTEMD_UNIT=unit)
+        # Configure our journald reader to watch only some units:
+        for unit in self.units:
+            self.journal_reader.add_match(_SYSTEMD_UNIT=unit)
 
-            # Then add our journald reader to our loop:
-            self.loop.add_reader(j.fileno(), self.reader, j)
+        # Then add our journald reader to our loop:
+        self.loop.add_reader(self.journal_reader.fileno(), self.reader)
 
-            # FIXME: How the f!ck am I supposed to handle CTRL+C properly ?!
-            try:
-                for s in (signal.SIGINT, signal.SIGTERM):
-                    self.loop.add_signal_handler(s, self.exit)
-            except ValueError as e:
-                # FIXME:
-                raise e
-            except RuntimeError as e:
-                # FIXME:
-                raise e
-            else:
-                # FIXME: is that clean enough ?
-                self.loop.run_forever()
-                self.loop.remove_reader(j.fileno())
-                self.loop.close()
+        return self
 
     def exit(self):
         """
         """
-        # FIXME: do we still need that ?
-        #     test as soon as Ellis is really processing entries.
+        self.loop.remove_reader(self.journal_reader.fileno())
 
-        # pendings = asyncio.Task.all_tasks()
-
-        # for task in pendings:
-        #     if not task.cancelled():
-        #         task.cancel()
-        #         task.exception()
+        self.journal_reader.flush_matches()
+        self.journal_reader.close()
 
         self.loop.stop()
-        # FIXME: would it be better to use self.loop.call_soon ?
+        self.loop.close()
+
+    def run(self):
+        """
+        """
+        self.loop.run_forever()
 
     def exceptions_handler(self, loop, context):
         """

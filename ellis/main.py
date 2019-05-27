@@ -6,6 +6,8 @@ import argparse
 import sys
 import warnings
 
+from pid import PidFile
+
 from .ellis import Ellis
 from .exceptions import NoRuleError
 
@@ -74,10 +76,9 @@ def main():
     config_file = args['config_file']
 
     try:
-        ellis = Ellis(config_file)
+        with Ellis(config_file) as ellis, PidFile("/var/run/ellis.pid") as pid:
+            ellis.run()
     except NoRuleError:
         msg = ("There are no valid rules in the config file. "
                "Ellis can not run without rules.")
         print_err(msg)
-    else:
-        ellis.start()
