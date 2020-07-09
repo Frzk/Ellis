@@ -15,19 +15,22 @@ class ShellCommander(object):
         """
         pass
 
-    async def start(self, cmd, *cmd_args):
+    async def start(self, cmd, cmd_args=[], cmd_input=None):
         """
         """
-        command = cmd
-
         # Make sure the provided arguments are safe:
-        if cmd_args:
-            args = __class__.escape_args(*cmd_args)
-            command = "{} {}".format(command, args)
+        args = __class__.escape_args(*cmd_args)
+
+        # Build full command:
+        command = f"{cmd} {args}"
 
         # And then launch the command:
-        proc = await asyncio.create_subprocess_shell(command, stderr=PIPE)
-        stdout_data, stderr_data = await proc.communicate()
+        proc = await asyncio.create_subprocess_shell(command, stdin=PIPE,
+                                                     stdout=PIPE, stderr=PIPE)
+
+        stdout_data, stderr_data = await proc.communicate(cmd_input)
+
+        #FIXME: do we need to await proc.terminate() ?
 
         if stdout_data:
             print(stdout_data)
