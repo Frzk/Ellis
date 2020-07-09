@@ -1,2 +1,3 @@
-systemd-python>=231
-smtplibaio>=2.0.1
+pid==2.2.5
+smtplibaio==2.1.2.post1
+systemd-python==234
