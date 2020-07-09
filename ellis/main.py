@@ -12,7 +12,7 @@ from .ellis import Ellis
 from .exceptions import NoRuleError
 
 
-__version__ = "1.0.dev3"
+__version__ = "1.0.dev4"
 __author__ = ("François Kubler <francois+ellis@kubler.org>",)
 __copyright__ = "Copyright (c) 2016 François Kubler"
 __license__ = "GPLv3"
