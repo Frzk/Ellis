@@ -45,7 +45,7 @@ class NFTables(ShellCommander):
 
         args = ['add', 'element', self.table_family, self.table_name, setname, to_ban]
 
-        return await self.start(__class__.CMD, *args)
+        return await self.start(__class__.CMD, args)
 
     def chose_blacklist(self, ip):
         """
