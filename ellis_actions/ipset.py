@@ -46,7 +46,7 @@ class Ipset(ShellCommander):
         """
         args = ['add', '-exist', setname, ip, 'timeout', timeout]
 
-        return await self.start(__class__.CMD, *args)
+        return await self.start(__class__.CMD, args)
 
     async def list(self, setname=None):
         """
@@ -65,7 +65,7 @@ class Ipset(ShellCommander):
         if setname is not None:
             args.append(setname)
 
-        return await self.start(__class__.CMD, *args)
+        return await self.start(__class__.CMD, args)
 
     def chose_blacklist(self, ip):
         """
