@@ -15,7 +15,7 @@ class ShellCommander(object):
         """
         pass
 
-    async def start(self, cmd, cmd_args=[], cmd_input=None):
+    async def start(self, cmd, cmd_args=[], input_bytes=None):
         """
         """
         # Make sure the provided arguments are safe:
@@ -28,9 +28,7 @@ class ShellCommander(object):
         proc = await asyncio.create_subprocess_shell(command, stdin=PIPE,
                                                      stdout=PIPE, stderr=PIPE)
 
-        stdout_data, stderr_data = await proc.communicate(cmd_input)
-
-        #FIXME: do we need to await proc.terminate() ?
+        stdout_data, stderr_data = await proc.communicate(input_bytes)
 
         if stdout_data:
             print(stdout_data)
